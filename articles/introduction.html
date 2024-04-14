@@ -22,11 +22,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary" data-bs-theme="dark"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">NormaliseForIC50</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,12 +96,12 @@
 <pre><code><span><span class="co">## Downloading GitHub repo TKMarkCheng/NormaliseForIC50@HEAD</span></span></code></pre>
 <pre class="bg-output"><code><span><span class="co">## </span></span>
 <span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="color: #00BBBB;">R CMD build</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">## * checking for file ‘/tmp/RtmpxHoS7K/remotes19297160399d/TKMarkCheng-NormaliseForIC50-9567c95/DESCRIPTION’ ... OK</span></span>
+<span><span class="co">## * checking for file ‘/tmp/RtmpEcvSy4/remotes1a1f4f150cd8/TKMarkCheng-NormaliseForIC50-b243f9d/DESCRIPTION’ ... OK</span></span>
 <span><span class="co">## * preparing ‘NormaliseForIC50’:</span></span>
 <span><span class="co">## * checking DESCRIPTION meta-information ... OK</span></span>
 <span><span class="co">## * checking for LF line-endings in source and make files and shell scripts</span></span>
 <span><span class="co">## * checking for empty or unneeded directories</span></span>
-<span><span class="co">## * building ‘NormaliseForIC50_2.0.1.tar.gz’</span></span></code></pre>
+<span><span class="co">## * building ‘NormaliseForIC50_2.1.0.tar.gz’</span></span></code></pre>
 <pre><code><span><span class="co">## Installing package into '/home/runner/work/_temp/Library'</span></span>
 <span><span class="co">## (as 'lib' is unspecified)</span></span></code></pre>
 </div>
@@ -175,9 +175,10 @@ columns in each folder this script is used on.</p>
 long as there’s no excessively weird symbols.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">NormaliseForIC50</span><span class="fu">::</span><span class="fu"><a href="../reference/final_func.html">final_func</a></span><span class="op">(</span><span class="va">neut_raw_files</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,control_neg_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,control_pos_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, rotation_deg_needed <span class="op">=</span> <span class="va">rotate_by</span><span class="op">)</span></span></code></pre></div>
-<pre class="bg-output"><code><span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example1.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 83.75"</span></span>
-<span><span class="co">## [1] "positive control = 299325"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example1.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 83.75</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 299325</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example1.xlsx</span></span></code></pre>
 <pre class="bg-output"><code><span><span class="co">##   sample.one sample.one.1 sample.two     NA. sample.three sample.three.1</span></span>
 <span><span class="co">## A     39.141       23.468     42.850  37.704      100.001         99.998</span></span>
 <span><span class="co">## B      3.384        2.448      7.828  18.021       99.995         99.991</span></span>
@@ -200,7 +201,7 @@ long as there’s no excessively weird symbols.</p>
 <div class="section level2">
 <h2 id="processing-all-the-files-in-the-directory">Processing all the files in the directory<a class="anchor" aria-label="anchor" href="#processing-all-the-files-in-the-directory"></a>
 </h2>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#create xlsx and populate df into separate sheets. CHANGE rotation_deg_needed if the plate was ROTATED when setting up.</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ycphs.github.io/openxlsx/index.html" class="external-link">openxlsx</a></span><span class="op">)</span></span>
 <span><span class="va">wb</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/createWorkbook.html" class="external-link">createWorkbook</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -216,47 +217,57 @@ long as there’s no excessively weird symbols.</p>
 <span>              rotation_deg_needed <span class="op">=</span> <span class="va">rotate_by</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"normalised data written to:"</span>,<span class="va">neut_file</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<pre class="bg-output"><code><span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example1.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 83.75"</span></span>
-<span><span class="co">## [1] "positive control = 299325"</span></span>
-<span><span class="co">## [1] "normalised data written to:example1"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example10.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 77.5"</span></span>
-<span><span class="co">## [1] "positive control = 361125"</span></span>
-<span><span class="co">## [1] "normalised data written to:example10"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example2.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 96.25"</span></span>
-<span><span class="co">## [1] "positive control = 361825"</span></span>
-<span><span class="co">## [1] "normalised data written to:example2"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example3.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 96.25"</span></span>
-<span><span class="co">## [1] "positive control = 354575"</span></span>
-<span><span class="co">## [1] "normalised data written to:example3"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example4.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 93.75"</span></span>
-<span><span class="co">## [1] "positive control = 363150"</span></span>
-<span><span class="co">## [1] "normalised data written to:example4"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example5.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 91.25"</span></span>
-<span><span class="co">## [1] "positive control = 370775"</span></span>
-<span><span class="co">## [1] "normalised data written to:example5"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example6.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 87.5"</span></span>
-<span><span class="co">## [1] "positive control = 351112.5"</span></span>
-<span><span class="co">## [1] "normalised data written to:example6"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example7.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 92.5"</span></span>
-<span><span class="co">## [1] "positive control = 393425"</span></span>
-<span><span class="co">## [1] "normalised data written to:example7"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example8.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 101.25"</span></span>
-<span><span class="co">## [1] "positive control = 381600"</span></span>
-<span><span class="co">## [1] "normalised data written to:example8"</span></span>
-<span><span class="co">## [1] "processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example9.xlsx"</span></span>
-<span><span class="co">## [1] "negative control = 91.25"</span></span>
-<span><span class="co">## [1] "positive control = 385575"</span></span>
-<span><span class="co">## [1] "normalised data written to:example9"</span></span></code></pre>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example1.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 83.75</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 299325</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example1.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example1"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example10.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 77.5</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 361125</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example10.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example10"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example2.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 96.25</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 361825</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example2.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example2"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example3.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 96.25</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 354575</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example3.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example3"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example4.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 93.75</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 363150</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example4.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example4"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example5.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 91.25</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 370775</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example5.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example5"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example6.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 87.5</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 351112.5</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example6.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example6"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example7.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 92.5</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 393425</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example7.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example7"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example8.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 101.25</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 381600</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example8.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example8"</span></span></code></pre>
+<pre><code><span><span class="co">## processing input file: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example9.xlsx</span></span></code></pre>
+<pre><code><span><span class="co">## negative control = 91.25</span></span></code></pre>
+<pre><code><span><span class="co">## positive control = 385575</span></span></code></pre>
+<pre><code><span><span class="co">## Finished processing: /home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/2022-09-04_reads//example9.xlsx</span></span></code></pre>
+<pre class="bg-output"><code><span><span class="co">## [1] "normalised data written to:example9"</span></span></code></pre>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/saveWorkbook.html" class="external-link">saveWorkbook</a></span><span class="op">(</span><span class="va">wb</span>,file<span class="op">=</span><span class="va">output_file</span>,overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"saved collated sheets to excel file:"</span>,<span class="va">output_file</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="bg-output"><code><span><span class="co">## [1] "saved collated sheets to excel file:/home/runner/work/NormaliseForIC50/NormaliseForIC50/Validation/test.xlsx"</span></span></code></pre>
@@ -274,7 +285,7 @@ long as there’s no excessively weird symbols.</p>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer>

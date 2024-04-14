@@ -6,11 +6,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary" data-bs-theme="dark"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">NormaliseForIC50</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,6 +68,16 @@
         <dd>Strings all functions together.</dd>
       </dl><dl><dt>
           
+          <code><a href="k_clustering.html">k_clustering()</a></code> 
+        </dt>
+        <dd>install.packages("Ckmeans.1d.dp") select k-cluster mean that is closest to the mean of your first and last rows without outliers</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mean_without_outliers.html">mean_without_outliers()</a></code> 
+        </dt>
+        <dd>Remove the outliers from your first and last rows (upper and lower bounds) and find the mean Define numeric_vector</dd>
+      </dl><dl><dt>
+          
           <code><a href="normalise.html">normalise()</a></code> 
         </dt>
         <dd>Reads in dataframe of Promega data, and normalise.</dd>
@@ -100,7 +110,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>
