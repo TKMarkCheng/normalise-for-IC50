@@ -11,7 +11,12 @@ knitr::opts_chunk$set(echo = TRUE)
 This document allows visualisation of the use of k-clustering to select the best mean for normalising neutralisation data and account for dodgy control values.  
 
 #Download Packages
-```{r, packages}
+```{r packages}
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("Ckmeans.1d.dp")
 library(ggplot2) #to make ggplot
 library(tidyverse)
 library(tidyr)
@@ -33,7 +38,7 @@ rotate_by <- 0
 
 #Clean dataset
 #'Isolate the positive and negative control values and the three largest and three smallest values from each sample column
-```{r, Create dataset}
+```{r Create dataset}
 #'Select the 3 maximum and 3 minimum values from the sample columns
 #'Use get_top_bottom function to isolate top 3 and bottom 3 values
 get_top_bottom <- function(column) {
@@ -69,14 +74,14 @@ control_neg_values <- transform(control_neg_values, Label = as.character(Label))
 
 #K-clustering
 #'Select the cluster mean from the positive and negative control that is closest to the average of the sample maximum and sample minimum values, respectively. A warning will be thrown if none of the k-clusters have at least 3 values.
-```{r, Find K-clusters for normalisation}
+```{r Find K-clusters for normalisation}
 source(here::here("R/k_clustering.R"))
 source(here::here("R/normalise_plate.R"))
 source(here::here("R/mean_without_outliers.R"))
 #exclude positive and negative control columns
   df.values<-df[,-c(control_neg_column,control_pos_column)]
   
-  # Throw warning 
+#'Throw warning 
   check_max(df.values,filename = filename) #warning if last three row values are not the largest in the column 
   check_min(df.values,filename = filename) #warning if first three row values are not the smallest in the column 
   lim <- data.frame(
@@ -89,7 +94,7 @@ control.pos <- k_clustering(unlist(df[,control_pos_column]), lim$upper_im, type 
 
 #Plot
 #' Combine control and sample data into dataset containing samples, values, and labels.
-```{r, Combine Data}
+```{r Combine Data}
 #'Combine labeled control and sample graphs
 df.visualize <- control_neg_values %>%
   bind_rows(control_pos_values)%>%
@@ -97,7 +102,7 @@ df.visualize <- control_neg_values %>%
 ```
 
 #'The plot shows boxplots for the minimum and maximum three values for each sample. Boxplots in the pos and neg control columns represent each cluster. An hline() is created for the mean generated from the k-clustering function applied to the control values. From the positive control, the "Positive Control Cluster Mean" is the mean of the cluster that is closest to the average of the sample maximums (highest values on the max boxplots). From the negative control, the "Negative Control Cluster Mean" is the mean of the cluster that is closest to the average of the sample minimums (lowest values on the min boxplots).
-```{r, plot using the cluster means}
+```{r plot using the cluster means}
 plot.new()
 ggplot(df.visualize, aes(x=df.visualize$y, y=df.visualize$x, color=Label))+
          labs(title = "Control Cluster Means for Normalisation",
@@ -124,7 +129,7 @@ ggplot(df.visualize, aes(x=df.visualize$y, y=df.visualize$x, color=Label))+
 ```
 
 #'Compared to simple means, it can be seen that the cluster mean is better for normalisation since it selects a mean that is closer to the maximum and minimum values. The hline for the positive control simple mean is much lower and not as close to the sample maximums as the selected cluster mean.
-```{r, plot with simple means}
+```{r plot with simple means}
 plot.new()
 ggplot(df.visualize, aes(x=df.visualize$y, y=df.visualize$x, color=Label))+
          labs(title = "Control Simple Means for Normalisation",
