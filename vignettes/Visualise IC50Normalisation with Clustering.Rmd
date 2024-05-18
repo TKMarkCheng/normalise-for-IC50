@@ -23,20 +23,41 @@ library(tidyr)
 library(dplyr)
 library(Ckmeans.1d.dp) #for k-clustering
 ```
-
-#Select Data
-#'Example for visualisation with anomalous data: examplekcv2
-```{r Download Files}
-search_folder = "Validation/" #CHANGE this to the folder containing all your input .xlsx data files
-input_directory = paste0(here::here(search_folder),"/")
-input_file <- here::here("Validation/anomaly_detection/example1kcv2.xlsx") # CHANGE directory and name for yourself
-df <- NormaliseForIC50::read_promega_plate_excel(input_promega_excel_file_path = input_file)
-
-# USER INPUT 2: CHANGE THESE TO YOUR SETTINGS  --------------------------------------------------------
-control_neg_column <- c(1)
-control_pos_column <- c(2)
-rotate_by <- 0
+```{r setup}
+if(!require("remotes"))install.packages("remotes",repos="http://cran.us.r-project.org")
+if(!require("NormaliseForIC50"))remotes::install_github("TKMarkCheng/NormaliseForIC50",dependencies = TRUE, force = TRUE)
+options(scipen = 999) # do not use scientific notation
 ```
+
+# Setting up
+load the library/package from github.
+```{r setup}
+if(!require("remotes"))install.packages("remotes",repos="http://cran.us.r-project.org")
+remotes::install_github("TKMarkCheng/NormaliseForIC50",dependencies = TRUE, force = TRUE)
+```
+#' Loading sample, defining output file, and plate rotation (if any)
+```{r setting up files}
+input_file <- here::here("Validation/anomaly_detection/example1kcv2.xlsx") #CHANGE to example file in your directory for troubleshooting
+input_directory = here::here("Validation/anomaly_detection/") #CHANGE this to directory of input .xlsx data files
+```
+
+```{r plate setup}
+rotate_by <- 0 # clockwise degrees, multiples of 90, useful when doing 12 fold dilutions.
+control_neg_column <- c(1) # default negative control column is on first column from the left
+control_pos_column <- c(2) # default positive control column is on second column from the left
+```
+# Getting the filenames from our directory
+```{r get all the filepaths in the directory}
+anomaly_detection_files <- Sys.glob(paste0(
+  paste0(input_directory,"/*.xlsx")) # find all .xlsx file in input directory
+)
+anomaly_detection_files
+```
+# Example case: examplekcv2
+#'Example for visualisation with anomalous data
+```{r example}
+df <- NormaliseForIC50::read_promega_plate_excel(input_promega_excel_file_path = input_file)
+df
 
 #Clean dataset
 #'Isolate the positive and negative control values and the three largest and three smallest values from each sample column
