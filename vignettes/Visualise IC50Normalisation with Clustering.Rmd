@@ -27,7 +27,9 @@ library(Ckmeans.1d.dp) #for k-clustering
 #Select Data
 #'Example for visualisation with anomalous data: examplekcv2
 ```{r Download Files}
-input_file <- here::here("Validation/2022-09-04_reads/example1.xlsx") #CHANGE to example file in your directory
+search_folder = "Validation/" #CHANGE this to the folder containing all your input .xlsx data files
+input_directory = paste0(here::here(search_folder),"/")
+input_file <- here::here("Validation/anomaly_detection/example1kcv2.xlsx") # CHANGE directory and name for yourself
 df <- NormaliseForIC50::read_promega_plate_excel(input_promega_excel_file_path = input_file)
 
 # USER INPUT 2: CHANGE THESE TO YOUR SETTINGS  --------------------------------------------------------
