@@ -13,6 +13,10 @@ This document allows visualisation of the use of k-clustering to select the best
 
 #Download Packages
 ```{r packages}
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("Ckmeans.1d.dp")
+
 library(ggplot2) #to make ggplot
 library(tidyverse)
 library(tidyr)
