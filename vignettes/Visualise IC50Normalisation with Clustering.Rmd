@@ -25,7 +25,7 @@ library(Ckmeans.1d.dp) #for k-clustering
 
 # Setting up
 ```{r setting up files}
-input_file <- "https://raw.githubusercontent.com/TKMarkCheng/NormaliseForIC50/main/Validation/anomaly_detection/example1kcv2.xlsx" #CHANGE to example file in your directory for troubleshooting
+input_file <- here::here("NormaliseForIC50/main/Validation/anomaly_detection/example1kcv2.xlsx") #CHANGE to example file in your directory for troubleshooting
 input_directory <- here::here("NormaliseForIC50/main/Validation/anomaly_detection") #CHANGE this to directory of input .xlsx data files
 ```
 
@@ -44,7 +44,7 @@ anomaly_detection_files
 # Example case: examplekcv2
 Examplekcv2 contains anomalously low values in the positive control column that are not ideal for normalisation. Although the majority of the values are low, the positive control values can be clustered into two groups with the higher average being better for normalisation - as long as the cluster used in normalisation contains at least three values. 
 ```{r example}
-df <- NormaliseForIC50::read_promega_plate_excel(input_promega_excel_file_path = input_file)
+df <- NormaliseForIC50::read_promega_plate_excel(input_promega_excel_file_path = "https://raw.githubusercontent.com/TKMarkCheng/NormaliseForIC50/main/Validation/anomaly_detection/example1kcv2.xlsx")
 df
 ```
 
