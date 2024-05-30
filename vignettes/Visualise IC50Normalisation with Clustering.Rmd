@@ -26,8 +26,8 @@ library(Ckmeans.1d.dp) #for k-clustering
 
 # Setting up
 ```{r setting up files}
-input_file <- here::here("Validation/anomaly_detection/example1kcv2.xlsx") #CHANGE to example file in your directory for troubleshooting
-input_directory = here::here("Validation/anomaly_detection/") #CHANGE this to directory of input .xlsx data files
+input_file <- here::here("/${NormaliseForIC50}/Validation/anomaly_detection/example1kcv2.xlsx") #CHANGE to example file in your directory for troubleshooting
+input_directory = here::here("/${NormaliseForIC50}/Validation/anomaly_detection/") #CHANGE this to directory of input .xlsx data files
 ```
 
 ```{r plate setup}
