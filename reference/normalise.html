@@ -57,6 +57,9 @@
 <span>  <span class="va">df</span>,</span>
 <span>  control_neg_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>  control_pos_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>  control_plating <span class="op">=</span> <span class="st">"column"</span>,</span>
+<span>  control_neg_wells <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A1"</span>, <span class="st">"B1"</span>, <span class="st">"C1"</span>, <span class="st">"D1"</span>, <span class="st">"E1"</span>, <span class="st">"F1"</span>, <span class="st">"G1"</span>, <span class="st">"H1"</span><span class="op">)</span>,</span>
+<span>  control_pos_wells <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A2"</span>, <span class="st">"B2"</span>, <span class="st">"C2"</span>, <span class="st">"D2"</span>, <span class="st">"E2"</span>, <span class="st">"F2"</span>, <span class="st">"G2"</span>, <span class="st">"H2"</span><span class="op">)</span>,</span>
 <span>  cluster <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  filename <span class="op">=</span> <span class="st">""</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -73,7 +76,19 @@
 
 
 <dt>control_pos_column</dt>
-<dd><p>The column(s) which positive/cell control are located (column number from left, integer)</p></dd>
+<dd><p>The column(s) which positive/virus control are located (column number from left, integer)</p></dd>
+
+
+<dt>control_plating</dt>
+<dd><p>how the controls are plated. default = "column", set to "custom" to input by wells using control_neg_wells and control_pos_wells.</p></dd>
+
+
+<dt>control_neg_wells</dt>
+<dd><p>The wells which negative control are located (custom mode)</p></dd>
+
+
+<dt>control_pos_wells</dt>
+<dd><p>The wells which positive control are located (custom mode)</p></dd>
 
 
 <dt>cluster</dt>
