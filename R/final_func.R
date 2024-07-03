@@ -10,7 +10,12 @@
 #' @export
 
 #final function
-final_func <- function(neut_xlsx_path, control_neg_column=c(1), control_pos_column=c(2),sheetname="Results", rotation_deg_needed=0, cluster=FALSE){
+final_func <- function(neut_xlsx_path, 
+                       control_neg_column=c(1), control_pos_column=c(2),
+                       control_plating = "column",
+                       control_neg_wells=c("A1","B1","C1","D1","E1","F1","G1","H1"),
+                       control_pos_wells=c("A2","B2","C2","D2","E2","F2","G2","H2"),
+                       sheetname="Results", rotation_deg_needed=0, cluster=FALSE){
   message("processing input file: ",neut_xlsx_path)
   input_name = basename(neut_xlsx_path)
   # 1. read in and select relevant 8x12 area of the excel Results sheet
@@ -18,9 +23,10 @@ final_func <- function(neut_xlsx_path, control_neg_column=c(1), control_pos_colu
   # 2. rotate by n degrees, if needed
   df <- rotate(df,rotation_deg_needed = rotation_deg_needed)
   # 3. normalize the rotated df
-  output <- normalise(df = df, 
-                      control_neg_column = control_neg_column,
-                      control_pos_column = control_pos_column, cluster = cluster,
+  output <- normalise(df = df, control_plating = control_plating,
+                      control_neg_column = control_neg_column,control_pos_column = control_pos_column,
+                      control_neg_wells = control_neg_wells, control_pos_wells = control_pos_wells, 
+                      cluster = cluster,
                       filename = input_name)
   # 4. Return and announce completion
   message("Finished processing: ",neut_xlsx_path)

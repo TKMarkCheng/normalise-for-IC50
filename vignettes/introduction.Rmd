@@ -60,8 +60,13 @@ plate1
 The Name assigned to each column can be any string of characters, as long as there's no excessively weird symbols.
 
 ```{r test run}
-NormaliseForIC50::final_func(neut_raw_files[1],control_neg_column = c(1),control_pos_column = c(2), rotation_deg_needed = rotate_by)
+plate1_normalised <- NormaliseForIC50::final_func(neut_raw_files[1],control_neg_column = c(1),control_pos_column = c(2), rotation_deg_needed = rotate_by)
+plate1_normalised
+# openxlsx::write.xlsx(
+#   plate1_normalised,
+#   "../tests/testthat/test_data/example1_normalised_without_anomaly_detection.xlsx")
 ```
+
 # Processing all the files in the directory
 
 ```{r}
@@ -83,3 +88,40 @@ for (neut_raw_file in neut_raw_files){
 saveWorkbook(wb,file=output_file,overwrite = TRUE)
 print(paste0("saved collated sheets to excel file:",output_file))
 ```
+
+# Example2: custom plating
+
+```{r}
+df <- NormaliseForIC50::read_promega_plate_excel(input_promega_excel_file_path = "../Validation/custom_control_plating/rbm 5.xlsx")
+
+NormaliseForIC50::final_func("../Validation/custom_control_plating/rbm 5.xlsx",control_plating = "custom",
+                             control_neg_wells=c("H1","H2","H3","H4","H5","H6"),
+                             control_pos_wells=c("H7","H8","H9","H10","H11","H12"),
+                             rotation_deg_needed = rotate_by)
+
+neut_raw_files <- Sys.glob(paste0(
+  paste0("../Validation/custom_control_plating","/*.xlsx")) # find all .xlsx file in input directory
+)
+neut_raw_files
+
+#create xlsx and populate df into separate sheets. CHANGE rotation_deg_needed if the plate was ROTATED when setting up.
+library(openxlsx)
+wb<-createWorkbook()
+for (neut_raw_file in neut_raw_files){
+  neut_file <- basename(neut_raw_file) #remove file path
+  neut_file = tools::file_path_sans_ext(neut_file) #remove extension
+  addWorksheet(wb,sheetName=neut_file)
+  writeData(wb, sheet = neut_file,
+            x = NormaliseForIC50::final_func(
+              neut_raw_file,
+              control_plating = "custom",
+              control_neg_wells = c("H1","H2","H3","H4","H5","H6"),
+              control_pos_column =c("H7","H8","H9","H10","H11","H12"),
+              rotation_deg_needed = rotate_by))
+  print(paste0("normalised data written to:",neut_file))
+}
+saveWorkbook(wb,file=here::here("Validation/test_CustomPlating.xlsx"),overwrite = TRUE)
+print(paste0("saved collated sheets to excel file: ",here::here("Validation/test_CustomPlating.xlsx")))
+
+```
+

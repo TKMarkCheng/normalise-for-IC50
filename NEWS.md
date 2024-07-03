@@ -1,7 +1,5 @@
 # NormaliseForIC50 2.2.0
-
-# NormaliseForIC50 2.1.0
-
+- #22 added the option for custom plating of controls. This functionality is currently not available for plate mapping.
 
 # NormaliseForIC50 2.0.0
 

@@ -8,6 +8,9 @@ final_func(
   neut_xlsx_path,
   control_neg_column = c(1),
   control_pos_column = c(2),
+  control_plating = "column",
+  control_neg_wells = c("A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"),
+  control_pos_wells = c("A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"),
   sheetname = "Results",
   rotation_deg_needed = 0,
   cluster = FALSE
