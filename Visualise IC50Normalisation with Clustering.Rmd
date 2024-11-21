@@ -1,0 +1,163 @@
+---
+title: "Normalise for IC50 with K-Clustering: Visualisation"
+author: "Kate Chiang"
+date: "2024-05-17"
+output: 
+  html_document:
+    code_download: true
+---
+
+This document allows visualisation of the use of k-clustering to select the best mean for normalising neutralisation data and account for dodgy control values.  
+
+#Download Packages
+```{r packages}
+library(ggplot2) #to make ggplot
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(Ckmeans.1d.dp) #for k-clustering
+```
+
+# Setting up
+```{r setting up files}
+input_file <- here::here("Validation/anomaly_detection/example1kcv2.xlsx") #CHANGE to example file in your directory for troubleshooting
+input_directory = here::here("Validation/anomaly_detection/") #CHANGE this to directory of input .xlsx data files
+```
+
+```{r plate setup}
+rotate_by <- 0 # clockwise degrees, multiples of 90, useful when doing 12 fold dilutions.
+control_neg_column <- c(1) # default negative control column is on first column from the left
+control_pos_column <- c(2) # default positive control column is on second column from the left
+```
+Getting the filenames from our directory of anomalous data
+```{r get all the filepaths in the directory}
+anomaly_detection_files <- Sys.glob(paste0(
+  paste0(input_directory,"/*.xlsx")) # find all .xlsx file in input directory
+)
+anomaly_detection_files
+```
+# Example case: examplekcv2
+Examplekcv2 contains anomalously low values in the positive control column that are not ideal for normalisation. Although the majority of the values are low, the positive control values can be clustered into two groups with the higher average being better for normalisation - as long as the cluster used in normalisation contains at least three values. 
+```{r example}
+df <- NormaliseForIC50::read_promega_plate_excel(input_promega_excel_file_path = input_file)
+df
+```
+
+# Clean dataset
+Isolate the positive and negative control values and the three largest and three smallest values from each sample column
+```{r Create dataset, warning=FALSE}
+#'Use get_top_bottom function to isolate top 3 and bottom 3 values
+get_top_bottom <- function(column) {
+  top_values <- sort(column, decreasing = TRUE)[1:3]
+  bottom_values <- sort(column)[1:3]
+  return(c(top_values, bottom_values))
+}
+top_bottom_values <- lapply(df[c(3:12)], get_top_bottom) #Apply get_top_bottom function
+top_bottom_df <- as.data.frame(top_bottom_values) #Create data frame
+df.vis <- top_bottom_df %>% gather(key=y, value=x)
+data_min_max <- df.vis %>% #Rearrange to get three columns with data labeled as 'min' or 'max'
+  arrange(x) %>%
+  group_by(y) %>%
+  mutate(Label = case_when(
+      row_number() <= 3 ~ "min",
+      row_number() > n() - 3 ~ "max",
+      TRUE ~ NA_character_
+    ))
+
+#'Isolate and cluster positive control values (The third column refers to which cluster the value belongs to)
+#'Ensure that the third column "Label" is a character
+control_pos_values <- df[c(2)] %>% gather(key=y, value=x)
+poscontrolmeans <- Ckmeans.1d.dp::Ckmeans.1d.dp(as.numeric(unlist(df[c(2)])))
+control_pos_values$Label <- poscontrolmeans$cluster
+control_pos_values<-transform(control_pos_values, Label = as.character(Label)) #"Label" column is denoted as <character>
+  
+#'Isolate and cluster negative control values (The third column refers to which cluster the value belongs to)
+control_neg_values <- df[c(1)] %>% gather(key=y, value=x)
+negcontrolmeans <- Ckmeans.1d.dp::Ckmeans.1d.dp(as.numeric(unlist(df[c(1)])))
+control_neg_values$Label <- negcontrolmeans$cluster
+control_neg_values <- transform(control_neg_values, Label = as.character(Label)) #"Label" column is denoted as <character>
+```
+
+# K-clustering
+Select the cluster mean from the positive and negative control that is closest to the average of the sample maximum and sample minimum values, respectively. A warning will be thrown if none of the k-clusters have at least 3 values.
+```{r Find K-clusters for normalisation}
+source(here::here("R/k_clustering.R"))
+source(here::here("R/normalise_plate.R"))
+source(here::here("R/mean_without_outliers.R"))
+#exclude positive and negative control columns
+  df.values<-df[,-c(control_neg_column,control_pos_column)]
+  
+  # Throw warning 
+  check_max(df.values,filename = filename) #warning if last three row values are not the largest in the column 
+  check_min(df.values,filename = filename) #warning if first three row values are not the smallest in the column 
+  lim <- data.frame(
+    lower_lim = apply(df.values, MARGIN = 2, min),
+    upper_im = apply(df.values, MARGIN = 2, max)
+  )
+```
+Isolate suitable positive and negative control clusters
+```{r Isolate suitable positive and negative control clusters, warning=FALSE}
+control.neg <- k_clustering(unlist(df[,control_neg_column]), lim$lower_lim, type = "negative", na.rm=TRUE) 
+control.pos <- k_clustering(unlist(df[,control_pos_column]), lim$upper_im, type = "positive", na.rm=TRUE)
+```
+
+# Plot
+Combine control and sample data into dataset containing samples, values, and labels.
+```{r Combine Data}
+#'Combine labeled control and sample graphs
+df.visualize <- control_neg_values %>%
+  bind_rows(control_pos_values)%>%
+  bind_rows(data_min_max)
+```
+
+The plot shows boxplots for the minimum and maximum three values for each sample. Boxplots in the pos and neg control columns represent the identified clusters. An hline() is created for the mean of a select cluster generated via the k-clustering function. From the positive control, the "Positive Control Cluster Mean" is the mean of the cluster that is closest to the average of the sample maximums (highest values on the "max" boxplots). From the negative control, the "Negative Control Cluster Mean" is the mean of the cluster that is closest to the average of the sample minimums (lowest values on the "min" boxplots).
+```{r Plot using the cluster means, warning=FALSE}
+ggplot(df.visualize, suppressWarnings(aes(x=df.visualize$y, y=df.visualize$x, color=Label)))+
+         labs(title = "Control Cluster Means for Normalisation",
+              x="Samples", y="Titers", color = "Legend")+
+         geom_boxplot(position = position_dodge(0.8))+
+         geom_jitter(position = position_dodge(0.8))+
+         scale_x_discrete(limits=c("neg", "pos", "sample.one", "sample.one.1", "sample.two", "NA.", "sample.three", "sample.three.1", "X9", "X10", "X11","X12"))+
+         geom_hline(yintercept = control.pos, color="maroon", lty="dashed", lwd=1)+
+         geom_hline(yintercept = control.neg, color="brown", lty="dashed", lwd=1)+
+  geom_label(label="Positive Control Cluster Mean",
+             x = "X9",
+             y = 380000,
+             label.padding = unit(0.01, "lines"),
+             label.size = 0.05,
+             color = "maroon",
+             size = 3)+
+  geom_label(label="Negative Control Cluster Mean",
+             x = "X9",
+             y = 30000,
+             label.padding = unit(0.01, "lines"),
+             label.size = 0.05,
+             color = "brown",
+             size = 3)
+```
+
+Compared to simple means, the cluster mean appears to work better for normalisation of widely varying control data since it selects a mean that is closest to the average maximum and minimum samples values. The hline for the positive control simple mean is much lower and not as close to the sample maximums as the selected cluster mean.
+```{r Plot with simple means, warning=FALSE}
+ggplot(df.visualize, suppressWarnings(aes(x=df.visualize$y, y=df.visualize$x, color=Label)))+
+         labs(title = "Control Simple Means for Normalisation",
+              x="Samples", y="Titers", color = "Legend")+
+         geom_boxplot(position = position_dodge(0.8))+
+         geom_jitter(position = position_dodge(0.8))+
+         scale_x_discrete(limits=c("neg", "pos", "sample.one", "sample.one.1", "sample.two", "NA.", "sample.three", "sample.three.1", "X9", "X10", "X11","X12"))+
+         geom_hline(yintercept = mean(unlist(df[,control_pos_column]),na.rm=TRUE), color="maroon", lty="dashed", lwd=1)+
+         geom_hline(yintercept = mean(unlist(df[,control_neg_column]),na.rm=TRUE), color="brown", lty="dashed", lwd=1)+
+  geom_label(label="Positive Control Simple Mean",
+             x = "X9",
+             y = 105000,
+             label.padding = unit(0.3, "lines"),
+             label.size = 0.05,
+             color = "maroon",
+             size = 3)+
+  geom_label(label="Negative Control Simple Mean",
+             x = "X9",
+             y = 30000,
+             label.padding = unit(0.3, "lines"),
+             label.size = 0.05,
+             color = "brown",
+             size = 3)
+```
